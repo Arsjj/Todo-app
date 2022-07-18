@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 const { REACT_APP_BASE_URL } = process.env
 
-function useFetch(endpointGroup, method, endpoint = '/') {
+function useFetch(endpointGroup, method, endpoint = '/', skipError = false) {
   const navigate = useNavigate()
   const [response, setResponse] = useState(null)
   const [error, setError] = useState(null)
@@ -45,7 +45,9 @@ function useFetch(endpointGroup, method, endpoint = '/') {
           })
           .then((err) => {
             if (err) {
-              message.error(err.error)
+              if (!skipError) {
+                message.error(err.error)
+              }
             }
             setError(err)
           })

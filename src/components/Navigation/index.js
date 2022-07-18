@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Menu } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { HomeOutlined, LoginOutlined } from '@ant-design/icons'
+import { HomeOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons'
+import { AuthContext } from '../../Providers/AuthProvider'
+import { useContext } from 'react'
+import useMenuActiveUrl from '../../hooks/useManuActiveUrl'
 
 const Navigation = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   function getItem(label, key, icon, children, type) {
     return {
       key,
@@ -15,17 +18,31 @@ const Navigation = () => {
     }
   }
 
-  const items = [
-    getItem('Home', 'home', <HomeOutlined />),
-    getItem('Authentication', 'auth', <LoginOutlined />),
-  ]
+  const [user] = useContext(AuthContext)
+
+  const items = useMemo(() =>
+    !!user
+      ? [
+          getItem('Home', 'home', <HomeOutlined />),
+          getItem('Profile', 'profile', <UserOutlined />),
+        ]
+      : [
+          getItem('Home', 'home', <HomeOutlined />),
+          getItem('Authentication', 'auth', <LoginOutlined />),
+          // getItem('Profile', 'profile', <HomeOutlined />),
+        ], [user]
+  )
+
+  const paths = useMemo(() => items.map((m) => m.key) || [], [items])
+  const menuActiveUrl = useMenuActiveUrl(paths)
+
   return (
     <div>
       <Menu
         onSelect={(e) => navigate(e.key)}
         style={{ justifyContent: 'center' }}
         mode="horizontal"
-        defaultSelectedKeys={['home']}
+        selectedKeys={[menuActiveUrl]}
         items={items}
       />
     </div>

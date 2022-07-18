@@ -1,4 +1,4 @@
-import { Authentication, Home, NotFound } from './pages'
+import { Authentication, Home, NotFound, Profile } from './pages'
 import { useRoutes, Navigate } from 'react-router-dom'
 import { PageContainer } from './components'
 
@@ -11,6 +11,10 @@ const routes = [
   {
     path: 'auth',
     element: <Authentication />,
+  },
+  {
+    path: 'profile',
+    element: <Profile />,
   },
   {
     path: '*',

@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react'
 import { Button, Checkbox, Form, Input, InputNumber } from 'antd'
 import { useFetch } from '../../../../hooks'
+import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../../../../Providers/AuthProvider'
 
 const AuthForm = ({ isSignUp, setTriggerState }) => {
+  const navigate = useNavigate()
+
+  const {1: setLoggedIn} = useContext(AuthContext)
+
   const [loginResponse, loginLoading, loginError, login] = useFetch(
     'user',
     'POST',
@@ -15,17 +22,18 @@ const AuthForm = ({ isSignUp, setTriggerState }) => {
   )
   const onFinish = ({ email, password, name, confirm, remember, age }) => {
     if (isSignUp) {
-      if (password === confirm) {
+       if (password === confirm) {
         register({ email, password, name, age })
       }
     } else {
       login({ email, password })
     }
   }
-
   useEffect(() => {
     if (loginResponse) {
       localStorage.setItem('token', loginResponse.token)
+      navigate('/home')
+      setLoggedIn(true)
     }
   }, [loginResponse])
 
@@ -45,6 +53,8 @@ const AuthForm = ({ isSignUp, setTriggerState }) => {
       onFinish={onFinish}
       initialValues={{
         remember: false,
+        email: 'aa@mail.ru',
+        password: 'a@mail.ru'
       }}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

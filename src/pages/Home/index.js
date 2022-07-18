@@ -12,8 +12,17 @@ const Home = () => {
     'GET',
     '/me'
   )
+  const [tasks, tasksLoading, tasksError, getTasks] = useFetch(
+      'task',
+      'GET',
+      '/'
+  )
+
+  console.log(tasks, 'tasks')
+
 
   useEffect(() => {
+    getTasks()
     if (localStorage.getItem('token')) {
       getUser()
     } else {
